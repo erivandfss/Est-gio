@@ -1,0 +1,90 @@
+import json
+
+def is_fibonacci(number):
+    """Verifica se um número pertence à sequência de Fibonacci"""
+    a, b = 0, 1
+    while b <= number:
+        if b == number:
+            return f"{number} pertence à sequência de Fibonacci."
+        a, b = b, a + b
+    return f"{number} não pertence à sequência de Fibonacci."
+
+def calcular_faturamento(dados_faturamento):
+    """Calcula menor, maior e dias com faturamento acima da média mensal"""
+    faturamento = [dia['valor'] for dia in dados_faturamento if dia['valor'] > 0]
+    
+    menor_valor = min(faturamento)
+    maior_valor = max(faturamento)
+    media_mensal = sum(faturamento) / len(faturamento)
+    dias_acima_media = sum(1 for valor in faturamento if valor > media_mensal)
+    
+    return {
+        "menor_valor": menor_valor,
+        "maior_valor": maior_valor,
+        "dias_acima_media": dias_acima_media
+    }
+
+def percentual_faturamento_estados():
+    """Calcula o percentual de faturamento por estado"""
+    faturamento = {
+        "SP": 67836.43,
+        "RJ": 36678.66,
+        "MG": 29229.88,
+        "ES": 27165.48,
+        "Outros": 19849.53
+    }
+    total = sum(faturamento.values())
+    percentuais = {estado: (valor / total) * 100 for estado, valor in faturamento.items()}
+    return percentuais
+
+def inverter_string(texto):
+    """Inverte os caracteres de uma string"""
+    invertida = ""
+    for char in texto:
+        invertida = char + invertida
+    return invertida
+
+def main():
+    while True:
+        print("\nEscolha uma das opções:")
+        print("1. Verificar se um número pertence à sequência de Fibonacci")
+        print("2. Calcular menor, maior e dias acima da média de faturamento")
+        print("3. Calcular percentual de faturamento por estado")
+        print("4. Inverter uma string")
+        print("5. Sair")
+
+        opcao = input("Digite o número da opção desejada: ")
+
+        if opcao == "1":
+            number = int(input("Informe um número: "))
+            print(is_fibonacci(number))
+        
+        elif opcao == "2":
+            try:
+                with open('faturamento.json', 'r') as file:
+                    dados_faturamento = json.load(file)
+                resultado = calcular_faturamento(dados_faturamento)
+                print("Menor valor de faturamento:", resultado["menor_valor"])
+                print("Maior valor de faturamento:", resultado["maior_valor"])
+                print("Dias com faturamento acima da média:", resultado["dias_acima_media"])
+            except FileNotFoundError:
+                print("Arquivo 'faturamento.json' não encontrado. Verifique se o arquivo está no diretório correto.")
+        
+        elif opcao == "3":
+            percentuais = percentual_faturamento_estados()
+            for estado, percentual in percentuais.items():
+                print(f"{estado}: {percentual:.2f}%")
+        
+        elif opcao == "4":
+            texto = input("Informe uma string: ")
+            print("String invertida:", inverter_string(texto))
+        
+        elif opcao == "5":
+            print("Saindo do programa.")
+            break
+        
+        else:
+            print("Opção inválida. Tente novamente.")
+
+if __name__ == "__main__":
+    main()
